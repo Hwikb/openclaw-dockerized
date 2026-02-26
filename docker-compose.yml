@@ -1,0 +1,59 @@
+services:
+  openclaw-gateway:
+    image: ${OPENCLAW_IMAGE:-hwikby/openclaw-dockerized:v1}
+    # ================= 新增的自动化构建模块 =================
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - OPENCLAW_VERSION=${OPENCLAW_VERSION:-2026.2.24}
+        - HTTP_PROXY=${BUILD_HTTP_PROXY:-}
+        - HTTPS_PROXY=${BUILD_HTTPS_PROXY:-}
+    # ========================================================
+    user: "1000:1000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      HTTP_PROXY: ${OPENCLAW_RUNTIME_HTTP_PROXY:-}
+      HTTPS_PROXY: ${OPENCLAW_RUNTIME_HTTPS_PROXY:-}
+      NO_PROXY: ${OPENCLAW_RUNTIME_NO_PROXY:-localhost,127.0.0.1,::1,host.docker.internal}
+    volumes:
+      - ${OPENCLAW_CONFIG_DIR:-./data}:/home/node/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR:-./data/workspace}:/home/node/.openclaw/workspace
+    ports:
+      - "${OPENCLAW_GATEWAY_PORT:-18789}:18789"
+      - "${OPENCLAW_BRIDGE_PORT:-18790}:18790"
+    init: true
+    restart: unless-stopped
+    command:
+      [
+        "openclaw",
+        "gateway",
+        "--bind",
+        "${OPENCLAW_GATEWAY_BIND:-lan}",
+        "--port",
+        "18789"
+      ]
+
+  openclaw-cli:
+    image: ${OPENCLAW_IMAGE:-hwikby/openclaw-ob-arm:v1}
+    user: "1000:1000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      HOME: /home/node
+      TERM: xterm-256color
+      BROWSER: echo
+      HTTP_PROXY: ""
+      HTTPS_PROXY: ""
+    volumes:
+      - ${OPENCLAW_CONFIG_DIR:-./data}:/home/node/.openclaw
+      - ${OPENCLAW_WORKSPACE_DIR:-./data/workspace}:/home/node/.openclaw/workspace
+    stdin_open: true
+    tty: true
+    init: true
+    profiles:
+      - cli
+    entrypoint: ["openclaw"]
