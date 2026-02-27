@@ -307,10 +307,9 @@ docker compose up -d
 
 ## 🔗 参考资料
 
-1. **OpenClaw 官方 Docker 文档**: [https://docs.openclaw.ai/install/docker](https://docs.openclaw.ai/install/docker)
-2. **ClawHub 官网 (插件/技能中心)**: [https://clawhub.ai/](https://clawhub.ai/)
-3. **OpenClaw 配置说明 (Gateway Configuration)**: [https://docs.openclaw.ai/gateway/configuration](https://docs.openclaw.ai/gateway/configuration)
-
+1. [OpenClaw 官方 Docker 文档](https://docs.openclaw.ai/install/docker)
+2. [ClawHub 官网 (插件/技能中心)](https://clawhub.ai/)
+3. [OpenClaw 配置说明 (Gateway Configuration)](https://docs.openclaw.ai/gateway/configuration)
 ---
 
 ## 📄 许可证 (License)
