@@ -22,7 +22,8 @@
 请确保你已经在项目目录中配置好了 `.env` 文件。以下是几个至关重要的环境变量：
 
 * `OPENCLAW_VERSION`: 指定你需要安装的 OpenClaw 版本（如 `latest` 或具体版本号）。
-* `OPENCLAW_CONFIG_DIR`: 宿主机上存储 OpenClaw 配置文件的路径（建议设置为 `./data` 或 `./config`），确保数据持久化。
+* `OPENCLAW_CONFIG_DIR`: 宿主机上存储 OpenClaw 配置文件的路径（建议设置为 `./data` 或 `./config`），用于持久化存放 `openclaw.json` 等核心配置。
+* `OPENCLAW_WORKSPACE_DIR`: 宿主机上存储 Agent 工作区文件的路径。Agent 运行期间生成的临时文件、代码片段或下载的资源将保存在此，建议与配置文件路径分开存放。
 * `BUILD_HTTP_PROXY`: **构建时代理**。仅在 `docker build` 阶段拉取 npm 依赖时使用，防止网络问题导致构建失败。
 * `OPENCLAW_RUNTIME_HTTP_PROXY`: **运行时代理**。用于 OpenClaw 启动后，请求外部 API 时的网络代理。
 
@@ -169,7 +170,13 @@ docker compose run --rm openclaw-cli onboard
 
 ## 🔗 第四步：Gateway 与设备配对
 
-OpenClaw 默认启用了安全网关机制。如果在浏览器直接访问 `localhost:18789`，可能会遇到以下两种常见拦截：
+在访问控制台之前，请确保网关服务已正常启动：
+
+```bash
+docker compose up -d openclaw-gateway
+```
+
+启动后，在浏览器访问 `http://localhost:18789`。由于 OpenClaw 默认启用了安全网关机制，你可能会遇到以下两种常见拦截：
 
 ### 错误 1: `unauthorized: gateway token mismatch`
 这是因为访问需要携带安全 Token。
@@ -180,18 +187,17 @@ OpenClaw 默认启用了安全网关机制。如果在浏览器直接访问 `loc
 ### 错误 2: `pairing required`
 说明当前的浏览器设备尚未被网关信任。请按以下步骤进行设备配对：
 
-1.  **查看待处理请求**：
-    在终端执行以下命令，找到 `Pending` 状态的请求，并记录下 `<request ID>`。
-    ```bash
-    docker compose exec openclaw-gateway openclaw devices list
-    ```
+1. **查看待处理请求**：
+   在终端执行以下命令，找到 `Pending` 状态的请求，并记录下 `<request ID>`。
+   ```bash
+   docker compose exec openclaw-gateway openclaw devices list
+   ```
 
-2.  **批准请求**：
-    执行以下命令直接批准最新的设备配对请求（或者将 `--latest` 替换为上一步记录的具体 `<request ID>`）：
-    ```bash
-    docker compose exec openclaw-gateway openclaw devices approve --latest
-    ```
-
+2. **批准请求**：
+   执行以下命令直接批准最新的设备配对请求（或者将 `--latest` 替换为上一步记录的具体 `<request ID>`）：
+   ```bash
+   docker compose exec openclaw-gateway openclaw devices approve --latest
+   ```
 ---
 
 ## 💬 第五步：接入聊天软件 (飞书)
