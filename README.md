@@ -32,9 +32,16 @@
 配置好环境变量后，你可以根据自己的需求，选择直接拉取已编译好的镜像，或者在本地自行构建名为 `openclaw-dockerized` 的镜像。
 
 #### 选项 A：拉取预构建镜像 (推荐)
-如果你想快速启动，可以直接在终端使用 `docker pull` 命令拉取已经打包好的 Docker 镜像：
-```bash
-docker pull hwikby/openclaw-dockerized:v1
+如果你想快速启动，可以直接在终端使用 `docker pull` 命令拉取已经打包好的 Docker 镜像。请根据你的系统架构选择对应的标签：
+
+* **ARM 架构 (如 Apple Silicon M1/M2/M3)**：
+  ```bash
+  docker pull hwikby/openclaw-dockerized:v1
+  ```
+* **AMD/Intel 架构 (x86_64)**：
+  ```bash
+  docker pull hwikby/openclaw-dockerized-amd:v1
+  ```
 ```
 
 #### 选项 B：本地自行构建
