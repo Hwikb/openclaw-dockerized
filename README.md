@@ -42,7 +42,7 @@
   ```bash
   docker pull hwikby/openclaw-dockerized-amd:v1
   ```
-```
+
 
 #### 选项 B：本地自行构建
 如果你需要深度定制，或者想配合你的代理参数构建最新版本的 OpenClaw，可以在包含 `Dockerfile` 的目录下，通过 `docker build -t` 命令自行构建镜像：
